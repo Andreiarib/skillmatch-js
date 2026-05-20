@@ -3,15 +3,12 @@
 const candidato = {
   nome: "Amanda",
   area: "Front-End",
-  habilidades: ["HTML", "CSS", "JavaScript", "React"],
+  habilidades: ["HTML", "CSS", "JavaScript", "React", "Scrum"],
   experienciaMeses: "6 meses",
 };
 
-// Teste temporário para ver no console depois
-//console.log("Candidato cadastrado:", candidato.nome);
-//console.log("Habilidades do candidato:", candidato.habilidades.join(", "));
-
 let vagaMaisCompativel = null;
+let sugestoesEstudo = [];
 
 // Criar um array lista de vagas
 const vagas = [
@@ -43,12 +40,47 @@ const vagas = [
     id: 4,
     empresa: "NovaDigital",
     cargo: "Desenvolvedor Vue.js",
-    requisitos: ["Vue", "Vuex", "Axios", "SCRUM"],
+    requisitos: ["Vue", "Vuex", "Axios", "Scrum"],
     salario: 5290,
     modalidade: "Remoto",
   },
 ];
-//console.log(vagas);
+
+vagas.forEach((vaga, i) => {
+  let objCompatibilidade = compatibilidade(vaga, candidato.habilidades);
+  console.log(`Empresa: ${objCompatibilidade.empresa}`);
+  console.log(`Cargo: ${objCompatibilidade.cargo}`);
+  console.log(
+    `Compatibilidade: ${objCompatibilidade.classificacaoPercentual}%`,
+  );
+  console.log(
+    `Habilidades encontradas: ${objCompatibilidade.requisitosAtendidos.join(", ")}`,
+  );
+  console.log(
+    `Habilidades faltantes: ${objCompatibilidade.requisitosNaoAtendidos.join(", ")}`,
+  );
+  console.log("Classificação:", objCompatibilidade.classificacao);
+  console.log();
+  if (!vagaMaisCompativel) {
+    vagaMaisCompativel = objCompatibilidade;
+  } else if (
+    vagaMaisCompativel.classificacaoPercentual <
+    objCompatibilidade.classificacaoPercentual
+  ) {
+    vagaMaisCompativel = objCompatibilidade;
+  }
+  objCompatibilidade.requisitosNaoAtendidos.forEach((sugestaoEstudo, i) => {
+    if (!sugestoesEstudo.includes(sugestaoEstudo)) {
+      sugestoesEstudo.push(sugestaoEstudo);
+    }
+  });
+});
+
+console.log("Vaga mais compatível:");
+console.log(`${vagaMaisCompativel.empresa} - ${vagaMaisCompativel.cargo}`);
+//console.log(`${vagaMaisCompativel.cargo}`);
+console.log(`${vagaMaisCompativel.classificacaoPercentual}%`);
+console.log(`Sugestões de estudo: ${sugestoesEstudo.join(", ")}`);
 
 // Função para calcular a compatibilidade com cada vaga
 
@@ -89,33 +121,3 @@ function compatibilidade(vaga, habilidades) {
 function calcularCompatibilidade(requisitosAtendidos, requisitosDaVaga) {
   return (requisitosAtendidos / requisitosDaVaga) * 100;
 }
-
-vagas.forEach((vaga, i) => {
-  let objCompatibilidade = compatibilidade(vaga, candidato.habilidades);
-  console.log(`Empresa: ${objCompatibilidade.empresa}`);
-  console.log(`Cargo: ${objCompatibilidade.cargo}`);
-  console.log(
-    `Compatibilidade: ${objCompatibilidade.classificacaoPercentual}%`,
-  );
-  console.log(
-    `Habilidades encontradas: ${objCompatibilidade.requisitosAtendidos.join(", ")}`,
-  );
-  console.log(
-    `Habilidades faltantes: ${objCompatibilidade.requisitosNaoAtendidos.join(", ")}`,
-  );
-  console.log("Classificação:", objCompatibilidade.classificacao);
-  console.log();
-  if (!vagaMaisCompativel) {
-    vagaMaisCompativel = objCompatibilidade;
-  } else if (
-    vagaMaisCompativel.classificacaoPercentual <
-    objCompatibilidade.classificacaoPercentual
-  ) {
-    vagaMaisCompativel = objCompatibilidade;
-  }
-});
-
-console.log("Vaga mais compatível:");
-console.log(`${vagaMaisCompativel.empresa} - ${vagaMaisCompativel.cargo}`);
-//console.log(`${vagaMaisCompativel.cargo}`);
-console.log(`${vagaMaisCompativel.classificacaoPercentual}%`);
