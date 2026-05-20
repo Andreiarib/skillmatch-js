@@ -47,3 +47,41 @@ const vagas = [
     modalidade: "Remoto",
   },
 ];
+//console.log(vagas);
+
+// Função para calcular a compatibilidade com cada vaga
+
+function compatibilidade(vaga, habilidades) {
+  const requisitosAtendidos = vaga.requisitos.filter((habilidade) =>
+    candidato.habilidades.includes(habilidade),
+  );
+
+  const requisitosNaoAtendidos = vaga.requisitos.filter(
+    (habilidade) => !candidato.habilidades.includes(habilidade),
+  );
+
+  //Classificar compatibilidade conforme percentual
+  const classificacaoPercentual = calcularCompatibilidade(
+    requisitosAtendidos.length,
+    vaga.requisitos.length,
+  );
+  if (classificacaoPercentual >= 80 && classificacaoPercentual <= 100) {
+    classificacao = "Alta compatibilidade";
+  } else if (classificacaoPercentual >= 50 && classificacaoPercentual <= 79) {
+    classificacao = "Média compatibilidade";
+  } else {
+    classificacao = "Baixa compatibilidade";
+  }
+
+  console.log(`Empresa: ${vaga.empresa}`);
+  console.log(`Cargo: ${vaga.cargo}`);
+  console.log(`Compatibilidade: ${classificacaoPercentual}%`);
+  console.log(`Habilidades encontradas: ${requisitosAtendidos.join(", ")}`);
+  console.log(`Habilidades faltantes: ${requisitosNaoAtendidos.join(", ")}`);
+  console.log("Classificação:", classificacao);
+}
+
+function calcularCompatibilidade(requisitosAtendidos, requisitosDaVaga) {
+  return (requisitosAtendidos / requisitosDaVaga) * 100;
+}
+compatibilidade(vagas[1], candidato.habilidades);
