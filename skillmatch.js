@@ -61,18 +61,17 @@ vagas.forEach((vaga, i) => {
   );
   console.log("Classificação:", objCompatibilidade.classificacao);
   console.log();
-  if (!vagaMaisCompativel) {
-    vagaMaisCompativel = objCompatibilidade;
-  } else if (
-    vagaMaisCompativel.classificacaoPercentual <
-    objCompatibilidade.classificacaoPercentual
-  ) {
-    vagaMaisCompativel = objCompatibilidade;
-  }
-  objCompatibilidade.requisitosNaoAtendidos.forEach((sugestaoEstudo, i) => {
-    if (!sugestoesEstudo.includes(sugestaoEstudo)) {
-      sugestoesEstudo.push(sugestaoEstudo);
-    }
+
+  //Usando Map para criar um novo array contendo a compatibilidade de cada vaga.
+  const compatibilidades = vagas.map((vaga) =>
+    compatibilidade(vaga, candidato.habilidades),
+  );
+
+  // Usando reduce percorrer todas as compatibilidades e retornar a vaga com maior percentual
+  vagaMaisCompativel = compatibilidades.reduce((melhor, atual) => {
+    return atual.classificacaoPercentual > melhor.classificacaoPercentual
+      ? atual
+      : melhor;
   });
 });
 
@@ -80,7 +79,9 @@ console.log("Vaga mais compatível:");
 console.log(`${vagaMaisCompativel.empresa} - ${vagaMaisCompativel.cargo}`);
 //console.log(`${vagaMaisCompativel.cargo}`);
 console.log(`${vagaMaisCompativel.classificacaoPercentual}%`);
-console.log(`Sugestões de estudo: ${sugestoesEstudo.join(", ")}`);
+console.log(
+  `Recomendações de estudo:\nPriorize estudar ${sugestoesEstudo.join(", ")}, pois esses conteúdos aparecem nas vagas.`,
+);
 
 // Função para calcular a compatibilidade com cada vaga
 
@@ -120,4 +121,17 @@ function compatibilidade(vaga, habilidades) {
 
 function calcularCompatibilidade(requisitosAtendidos, requisitosDaVaga) {
   return (requisitosAtendidos / requisitosDaVaga) * 100;
+}
+
+class Vaga {
+  constructor(empresa, cargo, requisitos, salario, modalidade) {
+    this.empresa = empresa;
+    this.cargo = cargo;
+    this.requisitos = requisitos;
+    this.salario = salario;
+    this.modalidade = modalidade;
+  }
+  exibirResumo() {
+    return `${this.cargo} na empresa ${this.empresa}`;
+  }
 }
