@@ -60,3 +60,33 @@ skillmatch-js/
 ├── skillmatch.js
 └── README.md
 ```
+
+## Tipos de variáveis utilizadas
+
+O projeto foi utiliza const e let seguindo boas práticas modernas do JavaScript, pois o var é uma forma mais antiga de declarar variáveis, é menos utilizado porque pode causar problemas no código, ou seja, comportamentos inesperados.
+
+## Métodos de array utilizados
+
+O projeto utiliza alguns métodos de array para manipular os dados das vagas:
+
+filter - para filtrar habilidades atendidas e não atendidas;
+map - para criar um novo array de compatibilidades;
+reduce- para encontrar a vaga mais compatível.
+
+## Programação Orientada a Objetos
+
+O projeto utiliza conceitos de POO através das classes:
+
+- Vaga
+- Vaga FrontEnd
+
+Também foi aplicada herança utilizando:
+javaScript
+class VagaFrontEnd extends Vaga
+
+## Melhorias futuras
+
+Algumas melhorias que podem ser implementadas futuramente:
+
+Interface web;
+Organizar melhor as funções.

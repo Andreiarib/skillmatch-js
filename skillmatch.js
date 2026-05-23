@@ -1,3 +1,30 @@
+class Vaga {
+  constructor(id, empresa, cargo, requisitos, salario, modalidade) {
+    this.id = id;
+    this.empresa = empresa;
+    this.cargo = cargo;
+    this.requisitos = requisitos;
+    this.salario = salario;
+    this.modalidade = modalidade;
+  }
+
+  exibirResumo() {
+    return `${this.cargo} na empresa ${this.empresa}`;
+  }
+}
+
+class VagaFrontEnd extends Vaga {
+  constructor(id, empresa, cargo, requisitos, salario, modalidade, nivel) {
+    super(id, empresa, cargo, requisitos, salario, modalidade);
+
+    this.nivel = nivel;
+  }
+
+  exibirNivel() {
+    return `Nível da vaga: ${this.nivel}`;
+  }
+}
+
 // Criar o perfil do candidato
 
 const candidato = {
@@ -12,41 +39,70 @@ let sugestoesEstudo = [];
 
 // Criar um array lista de vagas
 const vagas = [
-  {
-    id: 1,
-    empresa: "Microsoft",
-    cargo: "Desenvolvedor Front-End Júnior",
-    requisitos: ["JavaScript", "Vue", "Lógica de Programação", "Scrum"],
-    salario: 3200,
-    modalidade: "Híbrido",
-  },
-  {
-    id: 2,
-    empresa: "TechGold",
-    cargo: "Front-End Trainee",
-    requisitos: ["HTML", "CSS", "JavaScript"],
-    salario: 2100,
-    modalidade: "Presencial",
-  },
-  {
-    id: 3,
-    empresa: "WebDigitalSolutions",
-    cargo: "Estágio JavaScript Júnior",
-    requisitos: ["JavaScript", "Kanban", "GitHub", "HTML"],
-    salario: 1950,
-    modalidade: "Presencial",
-  },
-  {
-    id: 4,
-    empresa: "NovaDigital",
-    cargo: "Desenvolvedor Vue.js",
-    requisitos: ["Vue", "Vuex", "Axios", "Scrum"],
-    salario: 5290,
-    modalidade: "Remoto",
-  },
+  new VagaFrontEnd(
+    1,
+    "Microsoft",
+    "Desenvolvedor Front-End Júnior",
+    ["JavaScript", "Vue", "Lógica de Programação", "Scrum"],
+    3200,
+    "Híbrido",
+    "Júnior",
+  ),
+
+  new Vaga(
+    2,
+    "TechGold",
+    "Front-End Trainee",
+    ["HTML", "CSS", "JavaScript"],
+    2100,
+    "Presencial",
+  ),
+
+  new Vaga(
+    3,
+    "WebDigitalSolutions",
+    "Estágio JavaScript Júnior",
+    ["JavaScript", "Kanban", "GitHub", "HTML"],
+    1950,
+    "Presencial",
+  ),
+
+  new Vaga(
+    4,
+    "NovaDigital",
+    "Desenvolvedor Vue.js",
+    ["Vue", "Vuex", "Axios", "Scrum"],
+    5290,
+    "Remoto",
+  ),
 ];
 
+// Promise simula carregamento das vagas
+function buscarVagasSimuladas() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(vagas);
+    }, 1000);
+  });
+}
+
+// Closure mantém o valor da variável "total" mesmo após a função terminar
+function criarContadorDeAnalises() {
+  let total = 0;
+
+  return function () {
+    total++;
+
+    return total;
+  };
+}
+
+// Criando contador
+const contadorAnalises = criarContadorDeAnalises();
+
 vagas.forEach((vaga, i) => {
+  console.log(`Análise número: ${contadorAnalises()}`);
+
   let objCompatibilidade = compatibilidade(vaga, candidato.habilidades);
   console.log(`Empresa: ${objCompatibilidade.empresa}`);
   console.log(`Cargo: ${objCompatibilidade.cargo}`);
@@ -72,6 +128,11 @@ vagas.forEach((vaga, i) => {
     return atual.classificacaoPercentual > melhor.classificacaoPercentual
       ? atual
       : melhor;
+  });
+  objCompatibilidade.requisitosNaoAtendidos.forEach((sugestaoEstudo, i) => {
+    if (!sugestoesEstudo.includes(sugestaoEstudo)) {
+      sugestoesEstudo.push(sugestaoEstudo);
+    }
   });
 });
 
@@ -123,15 +184,28 @@ function calcularCompatibilidade(requisitosAtendidos, requisitosDaVaga) {
   return (requisitosAtendidos / requisitosDaVaga) * 100;
 }
 
-class Vaga {
-  constructor(empresa, cargo, requisitos, salario, modalidade) {
-    this.empresa = empresa;
-    this.cargo = cargo;
-    this.requisitos = requisitos;
-    this.salario = salario;
-    this.modalidade = modalidade;
-  }
-  exibirResumo() {
-    return `${this.cargo} na empresa ${this.empresa}`;
-  }
+// Função que recebe um callback
+function finalizarAnalise(nomeCandidato, callback) {
+  console.log("Análise finalizada.");
+
+  callback(nomeCandidato);
 }
+
+// Função callback
+function exibirMensagemFinal(nome) {
+  console.log(
+    `${nome}, revise suas habilidades faltantes e atualize seu plano de estudos.`,
+  );
+}
+
+// Chamando a função
+finalizarAnalise(candidato.nome, exibirMensagemFinal);
+
+// async/await → aguarda as vagas carregarem
+async function iniciarSistema() {
+  const vagasCarregadas = await buscarVagasSimuladas();
+
+  console.log("Vagas carregadas com sucesso!");
+}
+
+iniciarSistema();
